@@ -78,7 +78,7 @@ public class Controller extends JPanel{
 	     chooser.setCurrentDirectory(new java.io.File("."));
 	     chooser.setDialogTitle(choosertitle);
 	     FileNameExtensionFilter filter = new FileNameExtensionFilter(
-	        "JPG, PNG & GIF Images", "jpg", "gif", "png", "mp4");
+	        "JPG, PNG, GIF, and MP4", "jpg", "gif", "png", "mp4");
 	     chooser.setFileFilter(filter);
 	     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 	    
