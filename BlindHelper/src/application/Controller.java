@@ -9,9 +9,14 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoCapture;
+import org.opencv.videoio.Videoio;
+
+import com.sun.javafx.scene.control.skin.SliderSkin;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import utilities.Utilities;
 
@@ -19,13 +24,22 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.filechooser.*;
+import javax.swing.plaf.SliderUI;
+
 import java.io.*;
 
 public class Controller extends JPanel{
 	
 	@FXML
 	private ImageView imageView; // the image display window in the GUI
+	
+	@FXML
+	private Slider slider; //(MEL)TODO: ADD IN UI BUTTON FOR VIDEO PLAYING
 	
 	private Mat image;
 	
@@ -37,6 +51,9 @@ public class Controller extends JPanel{
 	private double[] freq; // frequencies for each particular row
 	private int numberOfQuantizionLevels;
 	private int numberOfSamplesPerColumn;
+	
+	private VideoCapture capture;
+	private ScheduledExecutorService timer;
 	
 	   JButton go;
 	   String sourceFolder="";
@@ -70,6 +87,36 @@ public class Controller extends JPanel{
 	}
 	
 	
+	protected void createFrameGrabber() throws InterruptedException {
+		 if (capture != null && capture.isOpened()) { // the video must be open
+		 double framePerSecond = capture.get(Videoio.CAP_PROP_FPS);
+		 // create a runnable to fetch new frames periodically
+		 Runnable frameGrabber = new Runnable() {
+			 
+		 @Override
+		 public void run() {
+			 Mat frame = new Mat();
+			 if (capture.read(frame)) { // decode successfully
+				 javafx.scene.image.Image im = Utilities.mat2Image(frame);
+				 Utilities.onFXThread(imageView.imageProperty(), im);
+				 double currentFrameNumber = capture.get(Videoio.CAP_PROP_POS_FRAMES);
+				 double totalFrameCount = capture.get(Videoio.CAP_PROP_FRAME_COUNT);
+				 slider.setValue(currentFrameNumber / totalFrameCount * (slider.getMax() - slider.getMin()));
+			 } else { // reach the end of the video
+				 capture.set(Videoio.CAP_PROP_POS_FRAMES, 0);
+			 }
+			 }
+		 };
+		 // terminate the timer if it is running
+		 if (timer != null && !timer.isShutdown()) {
+			 timer.shutdown();
+			 timer.awaitTermination(Math.round(1000/framePerSecond), TimeUnit.MILLISECONDS);
+		 }
+		 // run the frame grabber
+		 timer = Executors.newSingleThreadScheduledExecutor();
+		 timer.scheduleAtFixedRate(frameGrabber, 0, Math.round(1000/framePerSecond), TimeUnit.MILLISECONDS);
+		 }
+	}
     
 	// This method should return the filename of the image to be played
 	// You should insert your code here to allow user to select the file
@@ -111,9 +158,18 @@ public class Controller extends JPanel{
 	protected void openImage(ActionEvent event) throws InterruptedException {
 		// This method opens an image and display it using the GUI
 		// You should modify the logic so that it opens and displays a video
+		
+		//(MEL)TODO: ADD IN THIS VIDEO CAPTURE CODE FOR VIDEO PLAY
+//		capture = new VideoCapture(getImageFilename()); // open video file
+//		 if (capture.isOpened()) { // open successfully
+//		 createFrameGrabber();
+//		 }
+		 
+		//FOR IMAGES
 		final String imageFilename = getImageFilename();
 		image = Imgcodecs.imread(imageFilename);
 		imageView.setImage(Utilities.mat2Image(image)); 
+		
 		// You don't have to understand how mat2Image() works. 
 		// In short, it converts the image from the Mat format to the Image format
 		// The Mat format is used by the opencv library, and the Image format is used by JavaFX
