@@ -15,7 +15,14 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import utilities.Utilities;
 
-public class Controller {
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.util.*;
+import javax.swing.filechooser.*;
+import java.io.*;
+
+public class Controller extends JPanel{
 	
 	@FXML
 	private ImageView imageView; // the image display window in the GUI
@@ -30,6 +37,12 @@ public class Controller {
 	private double[] freq; // frequencies for each particular row
 	private int numberOfQuantizionLevels;
 	private int numberOfSamplesPerColumn;
+	
+	   JButton go;
+	   String sourceFolder="";
+	   String theFile="";
+	   JFileChooser chooser;
+	   String choosertitle;
 	
 	@FXML
 	private void initialize() {
@@ -56,10 +69,42 @@ public class Controller {
 		}
 	}
 	
+	
+    
+	// This method should return the filename of the image to be played
+	// You should insert your code here to allow user to select the file
 	private String getImageFilename() {
-		// This method should return the filename of the image to be played
-		// You should insert your code here to allow user to select the file
-		return "resources/test.png";
+	     chooser = new JFileChooser(); 
+	     chooser.setCurrentDirectory(new java.io.File("."));
+	     chooser.setDialogTitle(choosertitle);
+	     FileNameExtensionFilter filter = new FileNameExtensionFilter(
+	        "JPG, PNG & GIF Images", "jpg", "gif", "png", "mp4");
+	     chooser.setFileFilter(filter);
+	     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	    
+	    
+	    if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) { 
+	      
+	         String dirr = "" + chooser.getCurrentDirectory();
+	         File file = chooser.getSelectedFile();
+	       
+	      if(dirr.substring(dirr.length()-1,dirr.length()).equals(".")){
+	           dirr = dirr.substring(0,dirr.length()-1);
+	           sourceFolder=""+dirr + "" + file.getName();
+	        }else{
+	            
+	            sourceFolder=""+dirr + "/" + file.getName();
+	        }
+
+	          System.out.println("Folder path: " + dirr + " | File Name: " + file.getName());
+	          System.out.println(sourceFolder);
+	 			//ExamineImage.lum(sourceFolder);
+	          return sourceFolder;
+	    
+	      } else {
+	  		return "resources/test.png";
+	      }
+
 	}
 	
 	@FXML
@@ -122,5 +167,5 @@ public class Controller {
 		} else {
 			// What should you do here?
 		}
-	} 
+	}
 }
