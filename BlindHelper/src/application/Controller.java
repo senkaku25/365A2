@@ -94,7 +94,7 @@ public class Controller extends JPanel{
 		 Runnable frameGrabber = new Runnable() {
 			 
 		 @Override
-		 public void run() {
+		 public void run() { //TODO: this doesn't play music yet..
 			 Mat frame = new Mat();
 			 if (capture.read(frame)) { // decode successfully
 				 javafx.scene.image.Image im = Utilities.mat2Image(frame);
@@ -159,16 +159,21 @@ public class Controller extends JPanel{
 		// This method opens an image and display it using the GUI
 		// You should modify the logic so that it opens and displays a video
 		
-		//(MEL)TODO: ADD IN THIS VIDEO CAPTURE CODE FOR VIDEO PLAY
-		capture = new VideoCapture(getImageFilename()); // open video file
-		 if (capture.isOpened()) { // open successfully
-		 createFrameGrabber();
-		 }
+		final String filename = getImageFilename();
+		
+		if(filename.contains(".mp4")) { //uhh add if theres other types of files
+			capture = new VideoCapture(filename); // open video file
+			 if (capture.isOpened()) { // open successfully
+			 createFrameGrabber();
+			 }			
+		} else { //TODO: fix this horrible offset
+			image = Imgcodecs.imread(filename);
+			imageView.setImage(Utilities.mat2Image(image)); 
+		}
+
 		 
-		//FOR IMAGES
-//		final String imageFilename = getImageFilename();
-//		image = Imgcodecs.imread(imageFilename);
-//		imageView.setImage(Utilities.mat2Image(image)); 
+		//(MEL)TODO: ADD IN CO
+
 		
 		// You don't have to understand how mat2Image() works. 
 		// In short, it converts the image from the Mat format to the Image format
