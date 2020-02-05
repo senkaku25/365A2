@@ -170,10 +170,6 @@ public class Controller extends JPanel{
 			image = Imgcodecs.imread(filename);
 			imageView.setImage(Utilities.mat2Image(image)); 
 		}
-
-		 
-		//(MEL)TODO: ADD IN CO
-
 		
 		// You don't have to understand how mat2Image() works. 
 		// In short, it converts the image from the Mat format to the Image format
