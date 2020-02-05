@@ -39,7 +39,7 @@ public class Controller extends JPanel{
 	private ImageView imageView; // the image display window in the GUI
 	
 	@FXML
-	private Slider slider; //(MEL)TODO: ADD IN UI BUTTON FOR VIDEO PLAYING
+	private Slider slider;
 	
 	private Mat image;
 	
@@ -160,15 +160,15 @@ public class Controller extends JPanel{
 		// You should modify the logic so that it opens and displays a video
 		
 		//(MEL)TODO: ADD IN THIS VIDEO CAPTURE CODE FOR VIDEO PLAY
-//		capture = new VideoCapture(getImageFilename()); // open video file
-//		 if (capture.isOpened()) { // open successfully
-//		 createFrameGrabber();
-//		 }
+		capture = new VideoCapture(getImageFilename()); // open video file
+		 if (capture.isOpened()) { // open successfully
+		 createFrameGrabber();
+		 }
 		 
 		//FOR IMAGES
-		final String imageFilename = getImageFilename();
-		image = Imgcodecs.imread(imageFilename);
-		imageView.setImage(Utilities.mat2Image(image)); 
+//		final String imageFilename = getImageFilename();
+//		image = Imgcodecs.imread(imageFilename);
+//		imageView.setImage(Utilities.mat2Image(image)); 
 		
 		// You don't have to understand how mat2Image() works. 
 		// In short, it converts the image from the Mat format to the Image format
