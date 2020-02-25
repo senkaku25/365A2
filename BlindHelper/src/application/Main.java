@@ -20,6 +20,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Blind Helper");
 			primaryStage.show();
+			primaryStage.setResizable(false); //Disable resize of screen
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

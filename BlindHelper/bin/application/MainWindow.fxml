@@ -8,6 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <bottom>
@@ -15,19 +18,44 @@
          <children>
             <HBox prefHeight="68.0" prefWidth="600.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#openImage" prefHeight="40.0" prefWidth="100.0" text="Open">
+               <Slider fx:id="sampleSlider" prefHeight="14.0" prefWidth="10" >
+                      <HBox.margin>
+                        <Insets left="25" top="20.0"  right="10" />
+                     </HBox.margin>
+            </Slider>
+         <Text fx:id="sampleText" strokeType="OUTSIDE" text="Sample Rate: " wrappingWidth="50">
+                      <HBox.margin>
+                        <Insets top="20" />
+                     </HBox.margin>
+            </Text>
+ 				<Button mnemonicParsing="false" onAction="#openImage" prefHeight="40.0" prefWidth="100.0" text="Open">
                      <HBox.margin>
-                        <Insets left="150.0" top="20.0" />
+                        <Insets left="50" top="20.0" />
                      </HBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#playImage" prefHeight="40.0" prefWidth="100.0" text="Play">
                      <HBox.margin>
-                        <Insets left="100.0" top="20.0" />
+                        <Insets left="50" top="20.0" />
                      </HBox.margin>
                   </Button>
+                     <Slider fx:id="subFrameSlider" prefHeight="14.0" prefWidth="10">
+                       <HBox.margin>
+                        <Insets left="65" top="20.0" right="10"/>
+                     </HBox.margin>
+            </Slider>
+         	<Text fx:id="frameText" strokeType="OUTSIDE" text="Frame: " wrappingWidth="50">
+                      <HBox.margin>
+                        <Insets top="20.0" />
+                     </HBox.margin>
+            </Text>
                </children>
             </HBox>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CMPT 365 | Simon Fraser University | May 2017&#10;Mark Drew (mark@cs.sfu.ca) | Chen Song (csa102@sfu.ca)" textAlignment="CENTER" wrappingWidth="456.638671875">
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
+            </Text>
+            <Text fx:id="imageTitle" strokeType="OUTSIDE" text="Title: " textAlignment="CENTER" wrappingWidth="456.638671875">
                <VBox.margin>
                   <Insets left="50.0" />
                </VBox.margin>
@@ -53,5 +81,14 @@
             <Insets top="10.0" />
          </BorderPane.margin>
       </VBox>
+      <children>
+      <VBox alignment="CENTER_LEFT" prefHeight="10" prefWidth="10.0">
+
+      </VBox>
+      <VBox BorderPane.alignment="CENTER_LEFT" prefHeight="10" prefWidth="10.0">
+
+      </VBox>
+   </children>
    </center>
+
 </BorderPane>
