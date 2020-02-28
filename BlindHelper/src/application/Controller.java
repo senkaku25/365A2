@@ -14,36 +14,23 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
-import com.sun.javafx.scene.control.skin.SliderSkin;
-
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import utilities.Utilities;
 
 import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.awt.List;
-import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.filechooser.*;
-import javax.swing.plaf.SliderUI;
-
 import java.io.*;
 
 public class Controller extends JPanel{
@@ -178,7 +165,6 @@ public class Controller extends JPanel{
 				 Utilities.onFXThread(imageView.imageProperty(), im);
 				 double currentFrameNumber = capture.get(Videoio.CAP_PROP_POS_FRAMES);
 				 totalFrameCount = capture.get(Videoio.CAP_PROP_FRAME_COUNT);
-				 frame_counter = currentFrameNumber;
 				 image = frame;
 				 if(currentFrameNumber % frameSubTime==0 || currentFrameNumber == 0.0) {
 					 try {
@@ -344,11 +330,11 @@ public class Controller extends JPanel{
             	}
             	double normalizedSignal = signal / height; // signal: [-height, height];  normalizedSignal: [-1, 1]
             	double normalizedClickSignal = clickSignal / height;
-            	averageSignal += normalizedSignal;
+            	averageSignal += normalizedSignal*0x7F;
             	audioBuffer[t-1] = (byte) (normalizedSignal*0x7F); // Be sure you understand what the weird number 0x7F is for
             	clickBuffer[t-1] = (byte) (normalizedClickSignal * 0x7F);
             }
-        	data.add(new XYChart.Data<String, Number>(Integer.toString(col), averageSignal/numberOfSamplesPerColumn));
+        	data.add(new XYChart.Data<String, Number>(Integer.toString(col), averageSignal));
         	sourceDataLine.write(audioBuffer, 0, numberOfSamplesPerColumn);
         }
     	series.getData().addAll(data);

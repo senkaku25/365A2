@@ -102,10 +102,10 @@
          <children>
             <LineChart fx:id="lineChart" legendVisible="false" prefHeight="73.0" prefWidth="707.0">
               <xAxis>
-                <CategoryAxis label="column" prefHeight="17.0" prefWidth="630.0" side="BOTTOM" />
+                <CategoryAxis label="column" prefHeight="26.0" prefWidth="630.0" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                <NumberAxis label="average tone" side="LEFT" />
+                <NumberAxis label="tone" side="LEFT" />
               </yAxis>
             </LineChart>
          </children>
