@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
@@ -8,70 +11,74 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0" prefWidth="707.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <bottom>
-      <VBox prefHeight="111.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="0.0" prefWidth="707.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="68.0" prefWidth="600.0">
+            <HBox prefHeight="85.0" prefWidth="710.0">
                <children>
-               <Slider fx:id="sampleSlider" prefHeight="14.0" prefWidth="10" >
+         <Text fx:id="sampleText" strokeType="OUTSIDE" text="Sample Rate:" wrappingWidth="74.00006103515625">
                       <HBox.margin>
-                        <Insets left="25" top="20.0"  right="10" />
-                     </HBox.margin>
-            </Slider>
-         <Text fx:id="sampleText" strokeType="OUTSIDE" text="Sample Rate: 8000" wrappingWidth="50">
-                      <HBox.margin>
-                        <Insets top="20" />
+                        <Insets left="35.0" top="10.0" />
                      </HBox.margin>
             </Text>
+               <Slider fx:id="sampleSlider" minWidth="-Infinity" prefHeight="14.0" prefWidth="106.0">
+                      <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+            </Slider>
  				<Button mnemonicParsing="false" onAction="#openImage" prefHeight="40.0" prefWidth="100.0" text="Open">
                      <HBox.margin>
-                        <Insets left="50" top="20.0" />
+                        <Insets left="20.0" />
                      </HBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#playImage" prefHeight="40.0" prefWidth="100.0" text="Play">
                      <HBox.margin>
-                        <Insets left="50" top="20.0" />
+                        <Insets left="20.0" />
                      </HBox.margin>
                   </Button>
-                     <Slider fx:id="subFrameSlider" prefHeight="14.0" prefWidth="10">
+         	<Text fx:id="frameText" strokeType="OUTSIDE" text="Sample FPS:" wrappingWidth="65.19995498657227">
+                      <HBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </HBox.margin>
+            </Text>
+                     <Slider fx:id="subFrameSlider" minWidth="-Infinity" prefHeight="14.0" prefWidth="106.0">
                        <HBox.margin>
-                        <Insets left="65" top="20.0" right="10"/>
+                        <Insets top="10.0" />
                      </HBox.margin>
             </Slider>
-         	<Text fx:id="frameText" strokeType="OUTSIDE" text="Frame: " wrappingWidth="50">
-                      <HBox.margin>
-                        <Insets top="20.0" />
-                     </HBox.margin>
-            </Text>
                </children>
-            </HBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CMPT 365 | Simon Fraser University | May 2017&#10;Mark Drew (mark@cs.sfu.ca) | Chen Song (csa102@sfu.ca)" textAlignment="CENTER" wrappingWidth="456.638671875">
+               <opaqueInsets>
+                  <Insets left="19.0" />
+               </opaqueInsets>
                <VBox.margin>
-                  <Insets left="50.0" />
+                  <Insets />
                </VBox.margin>
-            </Text>
+            </HBox>
             <Text fx:id="imageTitle" strokeType="OUTSIDE" text="Title: " textAlignment="CENTER" wrappingWidth="456.638671875">
                <VBox.margin>
-                  <Insets left="50.0" />
+                  <Insets bottom="50.0" left="75.0" />
                </VBox.margin>
             </Text>
          </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets top="20.0" />
+         </BorderPane.margin>
       </VBox>
    </bottom>
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox prefHeight="219.0" prefWidth="737.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageView" fitHeight="263.0" fitWidth="421.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imageView" fitHeight="171.0" fitWidth="391.0" pickOnBounds="true" preserveRatio="true">
                <VBox.margin>
-                  <Insets left="100.0" right="100.0" />
+                  <Insets left="150.0" right="100.0" />
                </VBox.margin>
             </ImageView>
-            <Slider fx:id="slider" prefHeight="14.0" prefWidth="480.0">
+            <Slider fx:id="slider" prefHeight="14.0" prefWidth="507.0">
                <VBox.margin>
                   <Insets left="100.0" right="100.0" />
                </VBox.margin>
@@ -85,10 +92,24 @@
       <VBox alignment="CENTER_LEFT" prefHeight="10" prefWidth="10.0">
 
       </VBox>
-      <VBox BorderPane.alignment="CENTER_LEFT" prefHeight="10" prefWidth="10.0">
+      <VBox prefHeight="10" prefWidth="10.0" BorderPane.alignment="CENTER_LEFT">
 
       </VBox>
    </children>
    </center>
+   <top>
+      <VBox prefHeight="13.0" prefWidth="654.0" BorderPane.alignment="CENTER">
+         <children>
+            <LineChart fx:id="lineChart" legendVisible="false" prefHeight="73.0" prefWidth="707.0">
+              <xAxis>
+                <CategoryAxis label="column" prefHeight="17.0" prefWidth="630.0" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis label="average tone" side="LEFT" />
+              </yAxis>
+            </LineChart>
+         </children>
+      </VBox>
+   </top>
 
 </BorderPane>

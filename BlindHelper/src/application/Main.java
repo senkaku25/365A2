@@ -15,7 +15,7 @@ public class Main extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			BorderPane root = (BorderPane)loader.load();
-			Scene scene = new Scene(root, 600, 400);
+			Scene scene = new Scene(root, 700, 450);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Blind Helper");

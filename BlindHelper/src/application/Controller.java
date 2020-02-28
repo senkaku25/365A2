@@ -16,19 +16,26 @@ import org.opencv.videoio.Videoio;
 
 import com.sun.javafx.scene.control.skin.SliderSkin;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import utilities.Utilities;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.awt.List;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -41,13 +48,16 @@ import java.io.*;
 
 public class Controller extends JPanel{
 	
-	private static int frame_counter = 0;
+	private double frame_counter = 0;
 	
 	@FXML
 	private ImageView imageView; // the image display window in the GUI
 	
 	@FXML
 	private Slider slider;
+	
+	@FXML
+	private LineChart<String, Number> lineChart;
 	
 	@FXML
 	private Slider subFrameSlider;
@@ -65,6 +75,7 @@ public class Controller extends JPanel{
 	private Text sampleText;
 	
 	private Mat image;
+	private XYChart.Series<String, Number> series;
 	
 	private int width;
 	private int height;
@@ -102,6 +113,9 @@ public class Controller extends JPanel{
 		numberOfQuantizionLevels = 16;
 		
 		numberOfSamplesPerColumn = 500;
+		
+		series = new XYChart.Series<>();
+		lineChart.getData().add(series);
 		
 		// assign frequencies for each particular row
 		freq = new double[height]; // Be sure you understand why it is height rather than width
@@ -154,16 +168,17 @@ public class Controller extends JPanel{
 		 slider.setShowTickMarks(true);
 		 slider.setShowTickLabels(true);
 		 // create a runnable to fetch new frames periodically
-		 Runnable frameGrabber = new Runnable() {
+		Runnable frameGrabber = new Runnable() {
 		 @Override
-		 public void run() { //TODO: this doesn't play music yet..
+		 public void run() { 
 			 Mat frame = new Mat();
 			 if (capture.read(frame)) { // decode successfully
+
 				 javafx.scene.image.Image im = Utilities.mat2Image(frame);
 				 Utilities.onFXThread(imageView.imageProperty(), im);
 				 double currentFrameNumber = capture.get(Videoio.CAP_PROP_POS_FRAMES);
 				 totalFrameCount = capture.get(Videoio.CAP_PROP_FRAME_COUNT);
-				
+				 frame_counter = currentFrameNumber;
 				 image = frame;
 				 if(currentFrameNumber % frameSubTime==0 || currentFrameNumber == 0.0) {
 					 try {
@@ -190,6 +205,9 @@ public class Controller extends JPanel{
 			 } else { // reach the end of the video
 				 capture.release();
 				 capture.set(Videoio.CAP_PROP_POS_FRAMES, 0);
+				 capture = null;
+				 slider.setValue(0);
+				 Utilities.onFXThread(imageView.imageProperty(), null);
 			 }
 			 }
 		 };
@@ -200,7 +218,6 @@ public class Controller extends JPanel{
 		 }
 		 // run the frame grabber
 		 timer = Executors.newSingleThreadScheduledExecutor();
-		 //WE WANT 1 FRAME PER SECOND?
 		 timer.scheduleAtFixedRate(frameGrabber, 0, Math.round(1000/framePerSecond), TimeUnit.MILLISECONDS);
 		 }
 	}
@@ -216,7 +233,6 @@ public class Controller extends JPanel{
 	     chooser.setFileFilter(filter);
 	     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 	    
-	    
 	    if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) { 
 	      
 	         String dirr = "" + chooser.getCurrentDirectory();
@@ -229,7 +245,6 @@ public class Controller extends JPanel{
 	            
 	            sourceFolder=""+dirr + "/" + file.getName();
 	        }
-
 	          System.out.println("Folder path: " + dirr + " | File Name: " + file.getName());
 	          System.out.println(sourceFolder);
 	 			//ExamineImage.lum(sourceFolder);
@@ -251,14 +266,13 @@ public class Controller extends JPanel{
 		File f = new File(filename);
 		imageTitle.setText("Title: " + f.getName());
 
-
 		slider.setMinorTickCount(1);
 		slider.setSnapToTicks(true);
 		slider.setMajorTickUnit(frameSubTime);
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
 		
-		if(filename.contains(".mp4")) { //uhh add if theres other types of files
+		if(filename.contains(".mp4")) {
 			isImage=false;
 			image=null;
 			if(capture != null) {
@@ -312,10 +326,10 @@ public class Controller extends JPanel{
         SourceDataLine sourceDataLine = AudioSystem.getSourceDataLine(audioFormat);
         sourceDataLine.open(audioFormat, sampleRate);
         sourceDataLine.start();
-
+        ObservableList<XYChart.Data<String, Number>> data = FXCollections.<XYChart.Data<String, Number>>observableArrayList();
         byte[] clickBuffer = new byte[numberOfSamplesPerColumn];
     	for (int col = 0; col < width; col++) {
-
+    		double averageSignal = 0;
         	byte[] audioBuffer = new byte[numberOfSamplesPerColumn];
         	for (int t = 1; t <= numberOfSamplesPerColumn; t++) {
         		double signal = 0;
@@ -330,16 +344,18 @@ public class Controller extends JPanel{
             	}
             	double normalizedSignal = signal / height; // signal: [-height, height];  normalizedSignal: [-1, 1]
             	double normalizedClickSignal = clickSignal / height;
+            	averageSignal += normalizedSignal;
             	audioBuffer[t-1] = (byte) (normalizedSignal*0x7F); // Be sure you understand what the weird number 0x7F is for
             	clickBuffer[t-1] = (byte) (normalizedClickSignal * 0x7F);
             }
+        	data.add(new XYChart.Data<String, Number>(Integer.toString(col), averageSignal/numberOfSamplesPerColumn));
         	sourceDataLine.write(audioBuffer, 0, numberOfSamplesPerColumn);
         }
+    	series.getData().addAll(data);
     	if(click_counter % 2 == 0) {
     		System.out.println("click");
         	sourceDataLine.write(clickBuffer,0,numberOfSamplesPerColumn);	
     	}
-    	
         sourceDataLine.drain();
         sourceDataLine.close();
 	}
@@ -349,7 +365,6 @@ public class Controller extends JPanel{
 		// This method "plays" the image opened by the user
 		// You should modify the logic so that it plays a video rather than an image
 		System.out.println("play button pressed");
-		//TODO::Checks if the image is a jpg file
 		if (isImage) {
 			// convert the image from RGB to grayscale
 			slider.setValue(1);
@@ -365,5 +380,6 @@ public class Controller extends JPanel{
 				e.printStackTrace();
 			}
 		}
+		series.getData().clear();
 	}
 }
