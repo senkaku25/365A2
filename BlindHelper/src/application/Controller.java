@@ -145,7 +145,6 @@ public class Controller extends JPanel{
 	}
 	
 
-	//TODO:: FIX THE LEAK
 	protected void playVideo() throws InterruptedException {
 		 if (capture != null && capture.isOpened()) { // the video must be open
 		 double framePerSecond = capture.get(Videoio.CAP_PROP_FPS);
@@ -191,9 +190,10 @@ public class Controller extends JPanel{
 			 } else { // reach the end of the video
 				 capture.release();
 				 capture.set(Videoio.CAP_PROP_POS_FRAMES, 0);
-				 capture = null;
+				 //capture = null;
 				 slider.setValue(0);
 				 Utilities.onFXThread(imageView.imageProperty(), null);
+				 timer.shutdown();
 			 }
 			 }
 		 };
