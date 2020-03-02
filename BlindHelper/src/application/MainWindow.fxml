@@ -30,12 +30,12 @@
             </Slider>
  				<Button mnemonicParsing="false" onAction="#openImage" prefHeight="40.0" prefWidth="100.0" text="Open">
                      <HBox.margin>
-                        <Insets left="20.0" />
+                        <Insets left="20.0" top="10.0" />
                      </HBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#playImage" prefHeight="40.0" prefWidth="100.0" text="Play">
                      <HBox.margin>
-                        <Insets left="20.0" />
+                        <Insets left="20.0" top="10.0" />
                      </HBox.margin>
                   </Button>
          	<Text fx:id="frameText" strokeType="OUTSIDE" text="Sample FPS:" wrappingWidth="65.19995498657227">
@@ -73,7 +73,7 @@
    <center>
       <VBox prefHeight="219.0" prefWidth="737.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageView" fitHeight="171.0" fitWidth="391.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imageView" fitHeight="186.0" fitWidth="463.0" pickOnBounds="true" preserveRatio="true">
                <VBox.margin>
                   <Insets left="150.0" right="100.0" />
                </VBox.margin>

@@ -351,6 +351,7 @@ public class Controller extends JPanel{
 		// This method "plays" the image opened by the user
 		// You should modify the logic so that it plays a video rather than an image
 		System.out.println("play button pressed");
+		series.getData().clear(); // clear graph data if any
 		if (isImage) {
 			// convert the image from RGB to grayscale
 			slider.setValue(1);
@@ -366,6 +367,5 @@ public class Controller extends JPanel{
 				e.printStackTrace();
 			}
 		}
-		series.getData().clear();
 	}
 }
